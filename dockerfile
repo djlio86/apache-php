@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# Definir argumentos para build-time
+# Definir los argumentos para build-time
 ARG PHP_VERSION="8.3"
 ARG BASE_IMAGE="php:${PHP_VERSION}-apache"
 
