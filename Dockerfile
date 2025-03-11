@@ -27,13 +27,16 @@ ENV GIT_URL=""
 
 # Ejecutar configuración en el primer arranque
 CMD set -e && \
+    echo "========== INICIANDO CONTENEDOR ==========" && \
     echo "$RSA_KEY" | base64 -d > /root/.ssh/id_rsa && \
     echo "$RSA_PUB_KEY" | base64 -d > /root/.ssh/id_rsa.pub && \
     chmod 600 /root/.ssh/id_rsa && chmod 644 /root/.ssh/id_rsa.pub && \
     ssh-keyscan bitbucket.desigual.com >> /root/.ssh/known_hosts && \
-    echo "Probando acceso SSH a Bitbucket..." && \
+    echo "========== PROBANDO CONEXIÓN SSH ==========" && \
     ssh -T git@bitbucket.desigual.com || exit 1 && \
-    echo "Clonando repositorio: $GIT_URL" && \
+    echo "========== CLONANDO REPOSITORIO ==========" && \
     GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone "$GIT_URL" . && \
-    echo "Repositorio clonado con éxito." && \
-    exec apache2-foreground
+    echo "========== REPOSITORIO CLONADO CON ÉXITO ==========" && \
+    apache2-foreground & \
+    echo "========== APACHE INICIADO ==========" && \
+    tail -f /dev/null
